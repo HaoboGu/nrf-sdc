@@ -120,7 +120,7 @@ impl Target {
     }
 }
 
-fn bindgen(target: &Target) -> bindgen::Builder {
+fn bindgen(target: &Target, third_party_path: &Path) -> bindgen::Builder {
     bindgen::Builder::default()
         .use_core()
         .size_t_is_usize(true)
@@ -129,6 +129,19 @@ fn bindgen(target: &Target) -> bindgen::Builder {
         .clang_arg(format!("-mfloat-abi={}", target.float_abi))
         .clang_arg("-mthumb")
         .clang_arg("-I./include")
+        .clang_arg(format!(
+            "-I{}",
+            third_party_path.join("arm/CMSIS_5/CMSIS/Core/Include").display()
+        ))
+        .clang_arg(format!("-I{}", third_party_path.join("nordic/nrfx/mdk").display()))
+        .clang_arg(format!(
+            "-I{}",
+            third_party_path.join("nordic/nrfxlib/mpsl/fem/include").display()
+        ))
+        .clang_arg(format!(
+            "-I{}",
+            third_party_path.join("nordic/nrfxlib/mpsl/include").display()
+        ))
         .clang_arg("-I./third_party/arm/CMSIS_5/CMSIS/Core/Include")
         .clang_arg("-I./third_party/nordic/nrfx/mdk")
         .clang_arg("-I./third_party/nordic/nrfxlib/mpsl/include")
@@ -148,29 +161,112 @@ fn bindgen(target: &Target) -> bindgen::Builder {
 }
 
 fn main() {
+    // Get the path of third party code from nrf-mpsl-sys
+    let third_party_path = PathBuf::from(env::var("DEP_NRFXLIB_SYS_THIRD_PARTY_REPO_PATH").unwrap());
+
     let target = Target::new(Series::get(), env::var("TARGET").unwrap());
 
-    let mut builder = bindgen(&target)
+    let mut builder = bindgen(&target, &third_party_path)
         .header("./include/stdlib.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_clock.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_ecb.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_cx_abstract_interface.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_pm.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_pm_config.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_temp.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_timeslot.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/mpsl_tx_power.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/nrf_errno.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/protocol/mpsl_cx_protocol_api.h")
-        .header("./third_party/nordic/nrfxlib/mpsl/include/protocol/mpsl_dppi_protocol_api.h");
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_clock.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_ecb.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_cx_abstract_interface.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_pm.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_pm_config.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_temp.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_timeslot.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/mpsl_tx_power.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/nrf_errno.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/protocol/mpsl_cx_protocol_api.h")
+                .to_str()
+                .unwrap(),
+        )
+        .header(
+            third_party_path
+                .join("nordic/nrfxlib/mpsl/include/protocol/mpsl_dppi_protocol_api.h")
+                .to_str()
+                .unwrap(),
+        );
 
     if cfg!(feature = "fem") {
         builder = builder
-            .header("./third_party/nordic/nrfxlib/mpsl/fem/include/mpsl_fem_config_common.h")
-            .header("./third_party/nordic/nrfxlib/mpsl/fem/include/mpsl_fem_init.h")
-            .header("./third_party/nordic/nrfxlib/mpsl/fem/include/mpsl_fem_power_model.h")
-            .header("./third_party/nordic/nrfxlib/mpsl/fem/include/mpsl_fem_types.h");
+            .header(
+                third_party_path
+                    .join("nordic/nrfxlib/mpsl/fem/include/mpsl_fem_config_common.h")
+                    .to_str()
+                    .unwrap(),
+            )
+            .header(
+                third_party_path
+                    .join("nordic/nrfxlib/mpsl/fem/include/mpsl_fem_init.h")
+                    .to_str()
+                    .unwrap(),
+            )
+            .header(
+                third_party_path
+                    .join("nordic/nrfxlib/mpsl/fem/include/mpsl_fem_power_model.h")
+                    .to_str()
+                    .unwrap(),
+            )
+            .header(
+                third_party_path
+                    .join("nordic/nrfxlib/mpsl/fem/include/mpsl_fem_types.h")
+                    .to_str()
+                    .unwrap(),
+            );
     }
 
     let (fem_lib, fem_includes): (Option<&str>, Option<&[&str]>) = match (
@@ -182,24 +278,25 @@ fn main() {
         (true, false, false) => (
             Some("simple_gpio"),
             Some(&[
-                "./third_party/nordic/nrfxlib/mpsl/fem/include/protocol/mpsl_fem_protocol_api.h",
-                "./third_party/nordic/nrfxlib/mpsl/fem/simple_gpio/include/mpsl_fem_config_simple_gpio.h",
+                "nordic/nrfxlib/mpsl/fem/include/protocol/mpsl_fem_protocol_api.h",
+                "nordic/nrfxlib/mpsl/fem/simple_gpio/include/mpsl_fem_config_simple_gpio.h",
             ]),
         ),
         (false, true, false) => (
             Some("nrf21540_gpio"),
             Some(&[
-                "./third_party/nordic/nrfxlib/mpsl/fem/include/mpsl_fem_config_nrf21540_common.h",
-                "./third_party/nordic/nrfxlib/mpsl/fem/include/protocol/mpsl_fem_protocol_api.h",
-                "./third_party/nordic/nrfxlib/mpsl/fem/nrf21540_gpio/include/mpsl_fem_config_nrf21540_gpio.h",
+                "nordic/nrfxlib/mpsl/fem/include/mpsl_fem_config_nrf21540_common.h",
+                "nordic/nrfxlib/mpsl/fem/include/protocol/mpsl_fem_protocol_api.h",
+                "nordic/nrfxlib/mpsl/fem/nrf21540_gpio/include/mpsl_fem_config_nrf21540_gpio.h",
             ]),
         ),
-        (false, false, true) => (Some("nrf21540_gpio_spi"),
+        (false, false, true) => (
+            Some("nrf21540_gpio_spi"),
             Some(&[
-                "./third_party/nordic/nrfxlib/mpsl/fem/include/mpsl_fem_config_nrf21540_common.h",
-                "./third_party/nordic/nrfxlib/mpsl/fem/include/protocol/mpsl_fem_protocol_api.h",
-                "./third_party/nordic/nrfxlib/mpsl/fem/nrf21540_gpio_spi/include/mpsl_fem_config_nrf21540_gpio_spi.h",
-                "./third_party/nordic/nrfxlib/mpsl/fem/nrf21540_gpio_spi/include/mpsl_fem_nrf21540_power_model_builtin.h",
+                "nordic/nrfxlib/mpsl/fem/include/mpsl_fem_config_nrf21540_common.h",
+                "nordic/nrfxlib/mpsl/fem/include/protocol/mpsl_fem_protocol_api.h",
+                "nordic/nrfxlib/mpsl/fem/nrf21540_gpio_spi/include/mpsl_fem_config_nrf21540_gpio_spi.h",
+                "nordic/nrfxlib/mpsl/fem/nrf21540_gpio_spi/include/mpsl_fem_nrf21540_power_model_builtin.h",
             ]),
         ),
         _ => panic!("Only one front-end module feature may be enabled"),
@@ -207,7 +304,7 @@ fn main() {
 
     if let Some(fem_includes) = fem_includes {
         for include in fem_includes.iter() {
-            builder = builder.header(*include);
+            builder = builder.header(third_party_path.join(include).to_str().unwrap());
         }
     }
 
@@ -217,9 +314,9 @@ fn main() {
         .write_to_file(PathBuf::from(env::var_os("OUT_DIR").unwrap()).join("bindings.rs"))
         .expect("Couldn't write bindgen output");
 
-    fn lib_path<P: AsRef<Path>>(dir: P, target: &Target) -> PathBuf {
-        let mut path = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").unwrap());
-        path.push("third_party/nordic/nrfxlib/mpsl");
+    fn lib_path<P: AsRef<Path>>(dir: P, target: &Target, third_party_path: &Path) -> PathBuf {
+        let mut path = third_party_path.to_path_buf();
+        path.push("nordic/nrfxlib/mpsl");
         path.push(dir);
         path.push("lib");
         path.push(target.chip_family);
@@ -227,8 +324,8 @@ fn main() {
         path
     }
 
-    let mpsl_lib_path = lib_path(".", &target);
-    let fem_common_lib_path = lib_path("fem/common", &target);
+    let mpsl_lib_path = lib_path(".", &target, &third_party_path);
+    let fem_common_lib_path = lib_path("fem/common", &target, &third_party_path);
 
     println!("cargo:rustc-link-search={}", mpsl_lib_path.to_str().unwrap());
     println!("cargo:rustc-link-search={}", fem_common_lib_path.to_str().unwrap());
@@ -236,14 +333,8 @@ fn main() {
     println!("cargo:rustc-link-lib=static=mpsl_fem_common");
 
     if let Some(fem) = fem_lib {
-        let fem_lib_path = lib_path(format!("fem/{fem}"), &target);
+        let fem_lib_path = lib_path(format!("fem/{fem}"), &target, &third_party_path);
         println!("cargo:rustc-link-search={}", fem_lib_path.to_str().unwrap());
         println!("cargo:rustc-link-lib=static=mpsl_fem_{}", fem);
     }
-
-    // Save the third party repo path to the env
-    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
-    let third_party_repo_path = manifest_dir.join("third_party");
-    let third_party_repo_path_str = third_party_repo_path.to_string_lossy();
-    println!("cargo:THIRD_PARTY_REPO_PATH={}", third_party_repo_path_str);
 }

@@ -26,6 +26,7 @@ central = []
 
 [dependencies]
 nrf-mpsl-sys = { version = "0.2.0", path = "../nrf-mpsl-sys" }
+nrfxlib-sys = { version = "0.1.0", path = "../nrfxlib-sys" }
 
 [build-dependencies]
 bindgen = "0.72.0"

@@ -263,7 +263,8 @@ fn bindgen(target: &Target, third_party_path: &Path, mem_fns: Rc<RefCell<Vec<u8>
 
 fn main() {
     // Get the path of third party code from nrf-mpsl-sys
-    let third_party_path = PathBuf::from(env::var("DEP_NRF_MPSL_SYS_THIRD_PARTY_REPO_PATH").unwrap());
+    // let third_party_path = PathBuf::from(env::var("DEP_NRF_MPSL_SYS_THIRD_PARTY_REPO_PATH").unwrap());
+    let third_party_path = PathBuf::from(env::var("DEP_NRFXLIB_SYS_THIRD_PARTY_REPO_PATH").unwrap());
 
     let target = Target::new(Series::get(), env::var("TARGET").unwrap());
 

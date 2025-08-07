@@ -727,6 +727,7 @@ version = "0.2.1"
 dependencies = [
  "bindgen",
  "doxygen-rs",
+ "nrfxlib-sys",
 ]
 
 [[package]]
@@ -784,8 +785,13 @@ dependencies = [
  "bindgen",
  "doxygen-rs",
  "nrf-mpsl-sys",
+ "nrfxlib-sys",
  "winnow",
 ]
+
+[[package]]
+name = "nrfxlib-sys"
+version = "0.1.0"
 
 [[package]]
 name = "num-traits"

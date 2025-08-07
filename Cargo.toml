@@ -6,10 +6,11 @@ members = [
     "nrf-mpsl-sys",
     "nrf-sdc",
     "nrf-sdc-sys",
+    "nrfxlib-sys",
 ]
 
 [profile.dev]
-opt-level = 1               # Use slightly better optimizations.
+opt-level = 1 # Use slightly better optimizations.
 
 [profile.release]
 codegen-units = 1
