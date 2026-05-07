@@ -186,6 +186,8 @@ async fn main(spawner: Spawner) {
     #[cfg(feature = "nrf54l")]
     let mut led = Output::new(p.P1_10, Level::Low, OutputDrive::Standard);
 
+    defmt::info!("advertising");
+
     loop {
         led.set_high();
         Timer::after(Duration::from_millis(300)).await;

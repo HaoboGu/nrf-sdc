@@ -30,3 +30,10 @@ overflow-checks = false
 #embassy-embedded-hal = {path = "../embassy/embassy-embedded-hal"}
 
 #bt-hci = { path = "../bt-hci" }
+embassy-executor = { git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" }
+embassy-futures = {git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" }
+embassy-embedded-hal = { git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" }
+embassy-hal-internal = { git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" } 
+embassy-nrf = { git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" }
+embassy-sync = { git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" }
+embassy-time = { git = "https://github.com/HaoboGu/embassy", rev = "bd4bbe0d71cc55266df69102001f6a1ae7413e84" }
