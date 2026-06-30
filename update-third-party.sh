@@ -115,6 +115,7 @@ keep_only "$THIRD_PARTY/nordic/nrfx/bsp/stable/mdk" \
 sparse_clone "$NRFXLIB_REPO" "$NRFXLIB_REF" "$THIRD_PARTY/nordic/nrfxlib" \
     mpsl/include \
     mpsl/lib/nrf52 mpsl/lib/nrf53 mpsl/lib/nrf54l mpsl/lib/nrf54l_ns mpsl/lib/nrf54h \
+    mpsl/lib/nrf54lm \
     mpsl/fem/include mpsl/fem/common \
     mpsl/fem/simple_gpio mpsl/fem/nrf21540_gpio mpsl/fem/nrf21540_gpio_spi \
     softdevice_controller/include \
